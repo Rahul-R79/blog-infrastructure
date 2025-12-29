@@ -1,0 +1,131 @@
+version: "3.8"
+
+services:
+    # Microservices - Backend
+    auth-service:
+        image: auth-service:latest
+        container_name: blog-auth-service
+        restart: unless-stopped
+        build:
+            context: ../../auth-service
+            dockerfile: Dockerfile
+        environment:
+            PORT: 5001
+            DATABASE_URL: ${MONGODB_ATLAS_URL}
+            JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+            JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+            NODE_ENV: ${NODE_ENV}
+        ports:
+            - "5001:5001"
+        networks:
+            - blog-network
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "node",
+                    "-e",
+                    "require('net').createConnection(5001, 'localhost')",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+
+    blog-service:
+        image: blog-service:latest
+        container_name: blog-blog-service
+        restart: unless-stopped
+        build:
+            context: ../../blog-service
+            dockerfile: Dockerfile
+        environment:
+            PORT: 5002
+            DATABASE_URL: ${SUPABASE_DATABASE_URL}
+            AWS_REGION: ${AWS_REGION}
+            AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+            AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+            AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
+            CLOUDFRONT_DOMAIN: ${CLOUDFRONT_DOMAIN}
+            NODE_ENV: ${NODE_ENV:-development}
+        ports:
+            - "5002:5002"
+        networks:
+            - blog-network
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "node",
+                    "-e",
+                    "require('net').createConnection(5002, 'localhost')",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+
+    api-gateway:
+        image: api-gateway:latest
+        container_name: blog-api-gateway
+        restart: unless-stopped
+        build:
+            context: ../../api-gateway
+            dockerfile: Dockerfile
+        environment:
+            PORT: 8080
+            AUTH_SERVICE_URL: http://auth-service:5001
+            BLOG_SERVICE_URL: http://blog-service:5002
+            JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+            JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+            FRONTEND_URL: ${FRONTEND_URL}
+            NODE_ENV: ${NODE_ENV:-development}
+        ports:
+            - "8080:8080"
+        depends_on:
+            - auth-service
+            - blog-service
+        networks:
+            - blog-network
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "node",
+                    "-e",
+                    "require('http').get('http://localhost:8080/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 5s
+
+    # Frontend
+    frontend:
+        image: blog-frontend:latest
+        container_name: blog-frontend
+        restart: unless-stopped
+        build:
+            context: ../../blog-frontend
+            dockerfile: Dockerfile
+            args:
+                VITE_API_GATEWAY_URL: ${VITE_API_GATEWAY_URL}
+        ports:
+            - "5173:80"
+        depends_on:
+            - api-gateway
+        networks:
+            - blog-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 5s
+
+# Networks
+networks:
+    blog-network:
+        driver: bridge
+        name: blog-network
+
