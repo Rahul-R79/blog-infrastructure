@@ -43,16 +43,26 @@ services:
           - key: NODE_ENV
             value: production
           - fromGroup: blog-secrets
-          - key: AUTH_SERVICE_URL
+          - key: AUTH_SERVICE_HOST
             fromService:
                 name: blog-auth-service
                 type: web
-                property: url
-          - key: BLOG_SERVICE_URL
+                property: host
+          - key: AUTH_SERVICE_PORT
+            fromService:
+                name: blog-auth-service
+                type: web
+                property: port
+          - key: BLOG_SERVICE_HOST
             fromService:
                 name: blog-blog-service
                 type: web
-                property: url
+                property: host
+          - key: BLOG_SERVICE_PORT
+            fromService:
+                name: blog-blog-service
+                type: web
+                property: port
 
 envVarGroups:
     - name: blog-secrets
