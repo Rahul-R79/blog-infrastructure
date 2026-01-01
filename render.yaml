@@ -44,9 +44,15 @@ services:
             value: production
           - fromGroup: blog-secrets
           - key: AUTH_SERVICE_URL
-            value: http://blog-auth-service:5001
+            fromService:
+                name: blog-auth-service
+                type: web
+                property: url
           - key: BLOG_SERVICE_URL
-            value: http://blog-blog-service:5002
+            fromService:
+                name: blog-blog-service
+                type: web
+                property: url
 
 envVarGroups:
     - name: blog-secrets
