@@ -2,6 +2,7 @@ services:
     # 1. Auth Service
     - type: web
       name: blog-auth-service
+      repo: https://github.com/Rahul-R79/auth-service
       env: node
       buildCommand: npm install && npm run build
       startCommand: npm run start
@@ -15,6 +16,7 @@ services:
     # 2. Blog Service
     - type: web
       name: blog-blog-service
+      repo: https://github.com/Rahul-R79/blog-service
       env: node
       buildCommand: npm install && npm run build
       startCommand: npm run start
@@ -28,6 +30,7 @@ services:
     # 3. API Gateway
     - type: web
       name: blog-api-gateway
+      repo: https://github.com/Rahul-R79/api-gateway
       env: node
       buildCommand: npm install && npm run build
       startCommand: npm run start
