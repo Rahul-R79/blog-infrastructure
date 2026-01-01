@@ -12,6 +12,9 @@ services:
             value: 5001
           - key: NODE_ENV
             value: production
+          - key: DATABASE_URL
+            fromGroup: blog-secrets
+            envVar: MONGODB_ATLAS_URL
           - fromGroup: blog-secrets
 
     # 2. Blog Service
@@ -27,6 +30,9 @@ services:
             value: 5002
           - key: NODE_ENV
             value: production
+          - key: DATABASE_URL
+            fromGroup: blog-secrets
+            envVar: SUPABASE_DATABASE_URL
           - fromGroup: blog-secrets
 
     # 3. API Gateway
