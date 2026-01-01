@@ -1,0 +1,67 @@
+services:
+    # 1. Auth Service
+    - type: web
+      name: blog-auth-service
+      env: node
+      buildCommand: npm install && npm run build
+      startCommand: npm run start
+      envVars:
+          - key: PORT
+            value: 5001
+          - key: NODE_ENV
+            value: production
+          - fromGroup: blog-secrets
+
+    # 2. Blog Service
+    - type: web
+      name: blog-blog-service
+      env: node
+      buildCommand: npm install && npm run build
+      startCommand: npm run start
+      envVars:
+          - key: PORT
+            value: 5002
+          - key: NODE_ENV
+            value: production
+          - fromGroup: blog-secrets
+
+    # 3. API Gateway
+    - type: web
+      name: blog-api-gateway
+      env: node
+      buildCommand: npm install && npm run build
+      startCommand: npm run start
+      envVars:
+          - key: PORT
+            value: 8080
+          - key: NODE_ENV
+            value: production
+          - fromGroup: blog-secrets
+          - key: AUTH_SERVICE_URL
+            fromService:
+                name: blog-auth-service
+                type: web
+                property: host
+          - key: BLOG_SERVICE_URL
+            fromService:
+                name: blog-blog-service
+                type: web
+                property: host
+
+envVarGroups:
+    - name: blog-secrets
+      envVars:
+          - key: MONGODB_ATLAS_URL
+            sync: false
+          - key: SUPABASE_DATABASE_URL
+            sync: false
+          - key: JWT_ACCESS_SECRET
+            sync: false
+          - key: JWT_REFRESH_SECRET
+            sync: false
+          - key: AWS_ACCESS_KEY_ID
+            sync: false
+          - key: AWS_SECRET_ACCESS_KEY
+            sync: false
+          - key: AWS_BUCKET_NAME
+            sync: false
