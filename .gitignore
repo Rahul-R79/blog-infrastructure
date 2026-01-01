@@ -1,4 +1,16 @@
-.env
+# General
+node_modules/
 dist/
 build/
-node_modules/
+.DS_Store
+*.log
+
+# Docker
+docker-compose/.env
+
+# Kubernetes
+k8s/base/secrets.yaml
+
+# IDEs
+.vscode/
+.idea/

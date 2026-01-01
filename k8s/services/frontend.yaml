@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: frontend
+    namespace: blog-app
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: frontend
+    template:
+        metadata:
+            labels:
+                app: frontend
+        spec:
+            containers:
+                - name: frontend
+                  image: blog-frontend:latest
+                  imagePullPolicy: Never
+                  ports:
+                      - containerPort: 80
+                  env:
+                      - name: VITE_API_GATEWAY_URL
+                        valueFrom:
+                            configMapKeyRef:
+                                { name: blog-config, key: VITE_API_GATEWAY_URL }
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: frontend
+    namespace: blog-app
+spec:
+    type: LoadBalancer
+    selector:
+        app: frontend
+    ports:
+        - protocol: TCP
+          port: 5173
+          targetPort: 80

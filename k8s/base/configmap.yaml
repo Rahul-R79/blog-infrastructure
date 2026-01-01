@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: blog-config
+    namespace: blog-app
+data:
+    NODE_ENV: "development"
+    AUTH_SERVICE_URL: "http://auth-service:5001"
+    BLOG_SERVICE_URL: "http://blog-service:5002"
+    FRONTEND_URL: "http://localhost:5173"
+    VITE_API_GATEWAY_URL: "http://localhost:8080"
+    AWS_REGION: "eu-north-1"
+    CLOUDFRONT_DOMAIN: "your-cloudfront-id.cloudfront.net"

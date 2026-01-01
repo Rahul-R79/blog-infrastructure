@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-service
+  namespace: blog-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blog-service
+  template:
+    metadata:
+      labels:
+        app: blog-service
+    spec:
+      containers:
+      - name: blog-service
+        image: blog-service:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5002
+        env:
+        - name: PORT
+          value: "5002"
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef: { name: blog-config, key: NODE_ENV }
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef: { name: blog-secrets, key: SUPABASE_DATABASE_URL }
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef: { name: blog-config, key: AWS_REGION }
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef: { name: blog-secrets, key: AWS_ACCESS_KEY_ID }
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef: { name: blog-secrets, key: AWS_SECRET_ACCESS_KEY }
+        - name: AWS_BUCKET_NAME
+          valueFrom:
+            secretKeyRef: { name: blog-secrets, key: AWS_BUCKET_NAME }
+        - name: CLOUDFRONT_DOMAIN
+          valueFrom:
+            configMapKeyRef: { name: blog-config, key: CLOUDFRONT_DOMAIN }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog-service
+  namespace: blog-app
+spec:
+  selector:
+    app: blog-service
+  ports:
+    - protocol: TCP
+      port: 5002
+      targetPort: 5002
