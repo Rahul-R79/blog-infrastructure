@@ -33,7 +33,7 @@ services:
     - type: web
       name: blog-api-gateway
       plan: free
-      repo: https://github.com/Rahul-R79/api-gateway
+      repo: https://github.com/Rahul-R79/api-gateway-blog.git
       env: node
       buildCommand: npm install && npm run build
       startCommand: npm run start
