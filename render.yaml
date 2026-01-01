@@ -71,3 +71,9 @@ envVarGroups:
             sync: false
           - key: AWS_BUCKET_NAME
             sync: false
+          - key: AWS_REGION
+            sync: false
+          - key: CLOUDFRONT_DOMAIN
+            sync: false
+          - key: FRONTEND_URL
+            sync: false 
