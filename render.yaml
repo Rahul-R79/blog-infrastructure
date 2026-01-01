@@ -14,7 +14,7 @@ services:
             value: production
           - key: DATABASE_URL
             fromGroup: blog-secrets
-            envVar: MONGODB_ATLAS_URL
+            name: MONGODB_ATLAS_URL
           - fromGroup: blog-secrets
 
     # 2. Blog Service
@@ -32,7 +32,7 @@ services:
             value: production
           - key: DATABASE_URL
             fromGroup: blog-secrets
-            envVar: SUPABASE_DATABASE_URL
+            name: SUPABASE_DATABASE_URL
           - fromGroup: blog-secrets
 
     # 3. API Gateway
