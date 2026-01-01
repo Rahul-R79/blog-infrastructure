@@ -44,15 +44,9 @@ services:
             value: production
           - fromGroup: blog-secrets
           - key: AUTH_SERVICE_URL
-            fromService:
-                name: blog-auth-service
-                type: web
-                property: host
+            value: http://blog-auth-service:5001
           - key: BLOG_SERVICE_URL
-            fromService:
-                name: blog-blog-service
-                type: web
-                property: host
+            value: http://blog-blog-service:5002
 
 envVarGroups:
     - name: blog-secrets
@@ -76,4 +70,4 @@ envVarGroups:
           - key: CLOUDFRONT_DOMAIN
             sync: false
           - key: FRONTEND_URL
-            sync: false 
+            sync: false
