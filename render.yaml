@@ -38,9 +38,9 @@ services:
             value: production
           - fromGroup: blog-secrets
           - key: AUTH_SERVICE_URL
-            value: http://blog-auth-service:5001
+            value: https://blog-auth-service.onrender.com
           - key: BLOG_SERVICE_URL
-            value: http://blog-blog-service:5002
+            value: https://blog-blog-service-oez9.onrender.com
 
 envVarGroups:
     - name: blog-secrets
