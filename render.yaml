@@ -4,9 +4,7 @@ services:
       name: blog-auth-service
       plan: free
       repo: https://github.com/Rahul-R79/auth-service
-      env: node
-      buildCommand: npm install && npx prisma generate && npm run build
-      startCommand: npm run start
+      env: docker
       envVars:
           - key: PORT
             value: 5001
@@ -19,9 +17,7 @@ services:
       name: blog-blog-service
       plan: free
       repo: https://github.com/Rahul-R79/blog-service
-      env: node
-      buildCommand: npm install && npx prisma generate && npm run build
-      startCommand: npm run start
+      env: docker
       envVars:
           - key: PORT
             value: 5002
@@ -34,35 +30,17 @@ services:
       name: blog-api-gateway
       plan: free
       repo: https://github.com/Rahul-R79/api-gateway-blog
-      env: node
-      buildCommand: npm install && npm run build
-      startCommand: npm run start
+      env: docker
       envVars:
           - key: PORT
             value: 8080
           - key: NODE_ENV
             value: production
           - fromGroup: blog-secrets
-          - key: AUTH_SERVICE_HOST
-            fromService:
-                name: blog-auth-service
-                type: web
-                property: host
-          - key: AUTH_SERVICE_PORT
-            fromService:
-                name: blog-auth-service
-                type: web
-                property: port
-          - key: BLOG_SERVICE_HOST
-            fromService:
-                name: blog-blog-service
-                type: web
-                property: host
-          - key: BLOG_SERVICE_PORT
-            fromService:
-                name: blog-blog-service
-                type: web
-                property: port
+          - key: AUTH_SERVICE_URL
+            value: http://blog-auth-service:5001
+          - key: BLOG_SERVICE_URL
+            value: http://blog-blog-service:5002
 
 envVarGroups:
     - name: blog-secrets
