@@ -24,22 +24,14 @@ spec:
                         value: "8080"
                       - name: AUTH_SERVICE_URL
                         valueFrom:
-                            {
-                                configMapKeyRef:
-                                    {
-                                        name: blog-config,
-                                        key: AUTH_SERVICE_URL,
-                                    },
-                            }
+                            configMapKeyRef:
+                                name: blog-config
+                                key: AUTH_SERVICE_URL
                       - name: BLOG_SERVICE_URL
                         valueFrom:
-                            {
-                                configMapKeyRef:
-                                    {
-                                        name: blog-config,
-                                        key: BLOG_SERVICE_URL,
-                                    },
-                            }
+                            configMapKeyRef:
+                                name: blog-config
+                                key: BLOG_SERVICE_URL
                       - name: JWT_ACCESS_SECRET
                         valueFrom:
                             {

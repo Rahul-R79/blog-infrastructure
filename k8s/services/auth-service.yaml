@@ -28,7 +28,7 @@ spec:
                                 configMapKeyRef:
                                     { name: blog-config, key: NODE_ENV },
                             }
-                      - name: DATABASE_URL
+                      - name: MONGODB_ATLAS_URL
                         valueFrom:
                             {
                                 secretKeyRef:
